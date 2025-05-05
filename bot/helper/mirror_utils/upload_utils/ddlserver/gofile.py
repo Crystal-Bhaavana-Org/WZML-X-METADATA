@@ -8,7 +8,6 @@ from aiofiles.os import path as aiopath
 from aiofiles.os import rename as aiorename
 from aiohttp import ClientSession
 
-from bot import LOGGER
 from bot.helper.ext_utils.bot_utils import sync_to_async
 
 
@@ -73,16 +72,16 @@ class Gofile:
             (await self.__getAccount())["rootFolder"], ospath.basename(path)
         )
         await self.__setOptions(
-            contentId=folder_data["folderId"], option="public", value="true"
+            contentId=folder_data["id"], option="public", value="true"
         )
 
-        folderId = folderId or folder_data["folderId"]
+        folderId = folderId or folder_data["id"]
         folder_ids = {".": folderId}
         for root, _, files in await sync_to_async(walk, path):
             rel_path = ospath.relpath(root, path)
             parentFolderId = folder_ids.get(ospath.dirname(rel_path), folderId)
             folder_name = ospath.basename(rel_path)
-            currFolderId = (await self.create_folder(parentFolderId, folder_name))["folderId"]
+            currFolderId = folderId #(await self.create_folder(parentFolderId, folder_name))["id"]
             await self.__setOptions(
                 contentId=currFolderId, option="public", value="true"
             )
@@ -106,7 +105,7 @@ class Gofile:
         if password and len(password) < 4:
             raise ValueError("Password Length must be greater than 4")
 
-        server = choice((await self.__getServer())["servers"])["name"]
+        #server = choice((await self.__getServer())["servers"])["name"]
         req_dict = {}
         if token := self.token or "":
             req_dict["token"] = token
@@ -129,7 +128,7 @@ class Gofile:
         await aiorename(path, new_path)
         self.dluploader.last_uploaded = 0
         upload_file = await self.dluploader.upload_aiohttp(
-            f"https://{server}.gofile.io/contents/uploadfile",
+            f"https://store-eu-par-3.gofile.io/contents/uploadfile",
             new_path,
             "file",
             req_dict,
@@ -221,4 +220,3 @@ class Gofile:
                 data={"token": self.token},
             ) as resp:
                 return await self.__resp_handler(await resp.json())
-                
