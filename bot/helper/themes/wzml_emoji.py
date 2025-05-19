@@ -82,7 +82,7 @@ class WZMLStyle:
 ┠ <b>☞ P-Core(s) :</b> {p_core} 
 ┠ <b>☞ V-Core(s) :</b> {v_core}
 ┠ <b>☞ Total Core(s) :</b> {total_core}
-┖ <b>☞ Usabl e CPU(s) :</b> {cpu_use}'''
+┖ <b>☞ Usable CPU(s) :</b> {cpu_use}'''
 
     REPO_STATS = '''┎ <b><i>🧑‍💻 REPO STATISTICS :</i></b>
 ┠ <b>🤖 Bot Updated :</b> {last_commit}
